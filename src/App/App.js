@@ -2,75 +2,102 @@ import cx from "classnames";
 import { Component } from "react";
 
 class TodoItems extends Component {
-
   constructor(props) {
     super(props);
     this.createTasks = this.createTasks.bind(this);
   }
 
-  delete(key) {
-    this.props.delete(key);
+  done(key) {
+    this.props.done(key);
   }
-  
+
   createTasks(item) {
-    return <li onClick={() => this.delete(item.key)} 
-    key={item.key}>{item.text}</li>
+    return (
+      <li
+        onClick={() => this.done(item.key)}
+        key={item.key}
+        className={cx({ "is-done": item.isDone })}
+      >
+        {item.text}
+      </li>
+    );
   }
 
   render() {
-    var todoEntries = this.props.entries;
-    var listItems = todoEntries.map(this.createTasks);
- 
-    return (
-      <ul className="theList">
-        {listItems}
-      </ul>
-    );
+    let todoEntries = this.props.entries;
+    let listItems = todoEntries.map(this.createTasks);
+    return <ul className="theList">{listItems}</ul>;
   }
 }
 
 export default class TodoList extends Component {
-
   constructor(props) {
     super(props);
-    
+
     this.state = {
-      items: []
+      items: [],
     };
-    
+
     this.addItem = this.addItem.bind(this);
-    this.deleteItem = this.deleteItem.bind(this);
+    this.doneItem = this.doneItem.bind(this);
+    this.filterItem = this.filterItem.bind(this);
   }
 
-  deleteItem(key) {
-    var filteredItems = this.state.items.filter(function (item) {
-      return (item.key !== key);
-    });
-   
+  saveItems(items) {
     this.setState({
-      items: filteredItems
+      items: items,
     });
+    localStorage.setItem('items', JSON.stringify(items))
   }
 
   addItem(e) {
     if (this._inputElement.value !== "") {
-      var newItem = {
+      let newItem = {
         text: this._inputElement.value,
-        key: Date.now()
+        key: Date.now(),
       };
-   
+
       this.setState((prevState) => {
-        return { 
-          items: prevState.items.concat(newItem) 
+        let newItemList = prevState.items.concat(newItem);
+        localStorage.setItem('items', JSON.stringify(newItemList))
+        return {
+          items: newItemList,
         };
-      });
-     
+      });      
+
       this._inputElement.value = "";
     }
     console.log(this.state.items);
-       
-    e.preventDefault();
 
+    e.preventDefault();
+  }
+
+  doneItem(key) {
+    let newItemList = this.state.items.map((item) => {
+      if (item.key === key) {
+        item.isDone = true;
+      }
+      return item;
+    });
+
+    this.saveItems(newItemList);
+  }
+
+  filterItem() {
+    let filteredList = this.state.items.filter((item) => {
+      return !item.isDone;
+    });
+
+    this.saveItems(filteredList);
+  }
+
+  componentDidMount() {
+    let items = localStorage.getItem('items');
+    items = JSON.parse(items)
+
+    this.setState({
+      items: items,
+    })
   }
 
   render() {
@@ -82,31 +109,30 @@ export default class TodoList extends Component {
             <input
               type="text"
               id="new-todo-input"
-              className="input input__lg"
+              className="input"
               name="text"
               autoComplete="off"
-              ref={(a) => this._inputElement = a} 
-                  placeholder="enter task">
-              </input>
-          
-            <button type="submit" className="btn btn__primary btn__lg">
+              ref={(a) => (this._inputElement = a)}
+              placeholder="enter task"
+            ></input>
+
+            <button type="submit" className="btn">
               Add
             </button>
-
           </form>
-
         </div>
-        
-        <TodoItems entries={this.state.items} delete={this.deleteItem}/>
 
+        <TodoItems entries={this.state.items} done={this.doneItem} />
+
+        <button style={{ margin: "20px" }} onClick={this.filterItem}>
+          Clear Completed
+        </button>
         <style>
-          {
-          `
-            .is-done {
-                text-decoration: line-through;
-            }
-            `
+          {`
+          .is-done {
+              text-decoration: line-through;
           }
+          `}
         </style>
       </>
     );
