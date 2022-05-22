@@ -27,7 +27,7 @@ export default class TodoItems extends Component {
     render() {
         let todoEntries = this.props.entries;
         let listItems = todoEntries.map(this.createTasks);
-        return <ul className="theList">{listItems}</ul>;
+        return <ul className="the-list">{listItems}</ul>;
     }
 
 }

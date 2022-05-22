@@ -18,7 +18,7 @@ export default class TodoList extends Component {
     this.setState({
       items: items,
     });
-    localStorage.setItem('items', JSON.stringify(items))
+    localStorage.setItem("items", JSON.stringify(items));
   }
 
   addItem(e) {
@@ -30,11 +30,11 @@ export default class TodoList extends Component {
 
       this.setState((prevState) => {
         let newItemList = prevState.items.concat(newItem);
-        localStorage.setItem('items', JSON.stringify(newItemList))
+        localStorage.setItem("items", JSON.stringify(newItemList));
         return {
           items: newItemList,
         };
-      });      
+      });
 
       this._inputElement.value = "";
     }
@@ -63,43 +63,40 @@ export default class TodoList extends Component {
   }
 
   componentDidMount() {
-    let items = localStorage.getItem('items');
-    items = JSON.parse(items)
+    let items = localStorage.getItem("items");
+    items = JSON.parse(items);
 
     this.setState({
       items: items,
-    })
+    });
   }
 
   render() {
     return (
-      <>
-        <div className="header">
-          <h2 className="label-wrapper">Todo List</h2>
-          <form onSubmit={this.addItem}>
-            <input
-              type="text"
-              id="new-todo-input"
-              className="input"
-              name="text"
-              autoComplete="off"
-              ref={(a) => (this._inputElement = a)}
-              placeholder="enter task"
-            ></input>
-
-            <button type="submit" className="btn">
-              Add
-            </button>
-          </form>
-        </div>
+      <div className="container">
+        <h1 className="title">Todo List</h1>
 
         <TodoItems entries={this.state.items} done={this.doneItem} />
 
-        <button style={{ margin: "20px" }} onClick={this.filterItem}>
-          Clear Completed
+        <form onSubmit={this.addItem}>
+          <input
+            type="text"
+            id="new-todo-input"
+            className="input"
+            name="text"
+            autoComplete="off"
+            ref={(a) => (this._inputElement = a)}
+            placeholder="enter task"
+          ></input>
+          <button type="submit" className="btn-add">
+            Add
+          </button>
+        </form>
+
+        <button className="btn-clear" onClick={this.filterItem}>
+          Clear completed task
         </button>
-        
-      </>
+      </div>
     );
   }
 }
