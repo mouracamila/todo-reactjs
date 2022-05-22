@@ -98,13 +98,7 @@ export default class TodoList extends Component {
         <button style={{ margin: "20px" }} onClick={this.filterItem}>
           Clear Completed
         </button>
-        <style>
-          {`
-          .is-done {
-              text-decoration: line-through;
-          }
-          `}
-        </style>
+        
       </>
     );
   }
