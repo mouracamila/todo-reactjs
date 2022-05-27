@@ -1,5 +1,5 @@
 <h1 align="center">
-Basic todo
+Simple task app with ReactJS
 </h1>
 
 ![todo-git](https://github.com/mouracamila/todo-reactjs/blob/main/todo.gif)
@@ -13,7 +13,7 @@ This is a simple project todo, with this characteristics:
 - [Local Storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
 - Add tasks
 - Change tasks status
-- Clear tasks 
+- Clear tasks
 
 ## How to use
 
@@ -39,7 +39,7 @@ This is a simple project todo, with this characteristics:
 
     Local:http://localhost:3000
 
-Done! 
+Done!
 
 ## License
 
